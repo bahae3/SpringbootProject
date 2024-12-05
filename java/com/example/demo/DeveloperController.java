@@ -16,7 +16,6 @@ public class DeveloperController {
     public String editProfile(HttpSession session, Model model) {
         // Retrieve user from session
         User user = (User) session.getAttribute("loggedInUser");
-        System.out.println(user);
         if (user == null) {
             return "redirect:/";
         }
@@ -25,13 +24,32 @@ public class DeveloperController {
     }
 
     @PostMapping("/profileFormSubmission")
-    public String editProfileSubmission(HttpServletRequest request){
-        return "redirect:/editProfile";
+    public String editProfileSubmission(HttpServletRequest request, HttpSession session, Model model) {
+        User user = (User) session.getAttribute("loggedInUser");
+        if (user == null) {
+            return "redirect:/";
+        }
+        String firstName = request.getParameter("editfName");
+        String lastName = request.getParameter("editlName");
+        String email = request.getParameter("editEmail");
+        String password = request.getParameter("editPwd");
+
+        if (User.updateUser(user.getId(), firstName, lastName, email, password)) {
+            user.setFirstName(firstName);
+            user.setLastName(lastName);
+            user.setEmail(email);
+            user.setPassword(password);
+            return "redirect:/editProfile";
+        } else {
+            model.addAttribute("user", user);
+            model.addAttribute("error", "Error updating profile.");
+            return "user/editProfile";
+        }
     }
 
     // Adding dev's technologies
     @GetMapping("/addTech")
-    public String addTech(HttpSession session,Model model) {
+    public String addTech(HttpSession session, Model model) {
         User user = (User) session.getAttribute("loggedInUser");
         if (user == null) {
             return "redirect:/";
@@ -42,9 +60,32 @@ public class DeveloperController {
     }
 
     @PostMapping("/addTechForm")
-    public String addTechForm(Model model) {
+    public String addTechForm(HttpSession session, HttpServletRequest request, Model model) {
+        User user = (User) session.getAttribute("loggedInUser");
+        if (user == null) {
+            return "redirect:/";
+        }
+        String technology = request.getParameter("technology");
+        int yearsExperience = Integer.parseInt(request.getParameter("yearsExp"));
+        int idUser = user.getId();
 
-        return "redirect:/addTechForm";
+        if (Competence.addNewTechnology(technology, yearsExperience, idUser)){
+            return "redirect:/addTech";
+        } else {
+            model.addAttribute("error", "Error adding this skill.");
+            return "user/addTechnology";
+        }
+    }
+
+    // Delete a technology
+    @GetMapping("/deleteTech")
+    public String deleteTech(@RequestParam("idTech") int id, Model model) {
+        if (Competence.deleteTechnology(id)) {
+            return "redirect:/addTech";
+        } else {
+            model.addAttribute("errorDelete", "Error deleting this skill.");
+            return "user/addTechnology";
+        }
     }
 
 

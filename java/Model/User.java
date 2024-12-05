@@ -87,6 +87,7 @@ public class User {
                 '}';
     }
 
+    // Authenticating the user (log in)
     public static User userLoginAuth(String email, String password) {
         User user;
         Connection conn = SingletonConn.getConnection();
@@ -117,6 +118,7 @@ public class User {
         }
     }
 
+    // Add a new user to the db, sign up
     public static boolean addNewUser(String firstName, String lastName, String email, String password) {
         boolean res = true;
         Connection conn = SingletonConn.getConnection();
@@ -139,5 +141,26 @@ public class User {
         return res;
     }
 
+    // Update user's information (edit his profile)
+    public static boolean updateUser(int idUser, String firstName, String lastName, String email, String password) {
+        boolean res = true;
+        Connection conn = SingletonConn.getConnection();
+        String sqlQuery = "UPDATE users SET firstName=?, lastName=?, email=?, password=? WHERE id=?";
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(sqlQuery);
+            pstmt.setString(1, firstName);
+            pstmt.setString(2, lastName);
+            pstmt.setString(3, email);
+            pstmt.setString(4, password);
+            pstmt.setInt(5, idUser);
 
+            int result = pstmt.executeUpdate();
+            if (result != 1) res = false;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            res = false;
+        }
+        return res;
+    }
 }

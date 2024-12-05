@@ -19,17 +19,14 @@ public class LoginSignup {
     public String loginFormSubmission(HttpServletRequest request, Model model) {
         String email = request.getParameter("loginEmail");
         String password = request.getParameter("loginPwd");
-        System.out.println(email);
-        System.out.printf(password);
 
         User user = User.userLoginAuth(email, password);
 
         if (user != null) {
-            System.out.println(user);
             // Store user information in the session
             HttpSession session = request.getSession();
             session.setAttribute("loggedInUser", user);
-            session.setMaxInactiveInterval(5 * 60 * 60);
+//            session.setMaxInactiveInterval(5 * 60 * 60);
             if (user.getIsAdmin() == 1) {
                 return "admin/adminPage";
             } else {
@@ -55,10 +52,6 @@ public class LoginSignup {
         String lastName = request.getParameter("lname");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
-        System.out.println(firstName);
-        System.out.println(lastName);
-        System.out.println(email);
-        System.out.printf(password);
 
         if (User.addNewUser(firstName, lastName, email, password)) return "homePage";
 

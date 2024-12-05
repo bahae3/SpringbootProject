@@ -19,7 +19,8 @@
 
         <input type="submit" value="Add Skill">
         <a th:href="@{/editProfile}">Edit Profile</a>
-<hr>
+        <p class="error" th:text="${error}"></p>
+        <hr>
         <h3>Your skills: </h3>
         <div class="table-wrapper">
             <table class="fl-table">
@@ -30,13 +31,14 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>Python</td>
-                    <td>5 Years</td>
-                    <td>❌</td>
+                <tr th:each="competence : ${competences}">
+                    <td th:text="${competence.technology}"></td>
+                    <td th:text="${competence.yearsExperience}"></td>
+                    <td><a th:href="@{/deleteTech(idTech=${competence.id})}">❌</a></td>
                 </tr>
                 <tbody>
             </table>
+            <p class="errorDeleteSkill" th:text="${errorDelete}"></p>
         </div>
     </form>
 </div>
