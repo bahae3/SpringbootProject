@@ -1,0 +1,37 @@
+-- NOTE: admin is "chef de projet"
+
+-- create the database:
+CREATE DATABASE IF NOT EXISTS tp7awd;
+
+-- # create the tables:
+-- create users table
+create table users(
+    id int not null AUTO_INCREMENT PRIMARY KEY,
+    firstName varchar(80) not null,
+    lastName varchar(80) not null,
+    email varchar(80) not null unique,
+    password varchar(80) not null,
+    isAdmin Tinyint(1) not null,
+    role varchar(80)
+);
+
+-- insert an admin:
+INSERT INTO users (firstName, lastName, email, password, isAdmin) VALUES ("Bahae", "As", "admin@email.com", "admin", 1);
+
+-- create competences table
+create table competences(
+    id int not null AUTO_INCREMENT PRIMARY KEY,
+    technology varchar(80) not null,
+    yearsExperience int not null,
+    idUser int not null,
+    foreign key (idUser) references users(id)
+);
+
+-- create project table
+create table project(
+    id int not null AUTO_INCREMENT PRIMARY KEY,
+    name varchar(255) not null unique,
+    description varchar(255) not null,
+    idUser int not null,
+    foreign key (idUser) references users(id)
+);
