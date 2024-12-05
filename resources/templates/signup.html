@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+<div class="loginFormDiv">
+    <form th:action="@{/signupFormSubmission}" method="post" class="loginForm">
+        <h1>Sign Up</h1>
+        <label class="loginLabel">First Name: </label>
+        <input type="text" name="fname" class="loginInput"><br>
+        <label class="loginLabel">Last Name: </label>
+        <input type="text" name="lname" class="loginInput"><br>
+        <label class="loginLabel">Email: </label>
+        <input type="email" name="email" class="loginInput"><br>
+        <label class="loginLabel">Password: </label>
+        <input type="password" name="password" class="loginInput"><br>
+        <input type="submit" value="Sign Up">
+        <p>Already have an account? <a th:href="@{/}">Log In</a></p>
+    </form>
+</div>
+</body>
+</html>

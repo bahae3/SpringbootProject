@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit your profile</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+<div class="loginFormDiv">
+    <form th:action="@{/profileFormSubmission}" method="post" class="loginForm">
+        <h1>Edit your profile</h1>
+        <label class="loginLabel">First Name: </label>
+        <input type="text" name="editfName" class="loginInput" th:value="${user.firstName}"><br>
+        <label class="loginLabel">Last Name: </label>
+        <input type="text" name="editlName" class="loginInput" th:value="${user.lastName}"><br>
+        <label class="loginLabel">Email: </label>
+        <input type="email" name="editEmail" class="loginInput" th:value="${user.email}"><br>
+        <label class="loginLabel">Password: </label>
+        <input type="password" name="editPwd" class="loginInput" th:value="${user.password}"><br>
+        <input type="submit" value="Update">
+        <a th:href="@{/addTech}">Update your skills</a>
+        <p th:text="${error}">
+    </form>
+</div>
+</body>
+</html>

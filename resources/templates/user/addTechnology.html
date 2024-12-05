@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Technology</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+<div class="loginFormDiv">
+    <form th:action="@{/addTechForm}" method="post" class="loginForm">
+        <h1>Add a technology (skill)</h1>
+        <label class="loginLabel">Technology: </label>
+        <input type="text" name="technology" class="loginInput" placeholder="e.g.: Python / Java / UML ..." required><br>
+        <p>Enter only one technology per time!</p> <!-- This should be smaller -->
+
+        <label class="loginLabel">Years of experience: </label>
+        <input type="number" name="yearsExp" class="loginInput" placeholder="e.g.: 5 / 0 / 12 ..." required><br>
+        <p>If year < 0, enter "0"!</p> <!-- This should be smaller -->
+
+        <input type="submit" value="Add Skill">
+        <a th:href="@{/editProfile}">Edit Profile</a>
+<hr>
+        <h3>Your skills: </h3>
+        <div class="table-wrapper">
+            <table class="fl-table">
+                <thead>
+                <tr>
+                    <th>Skills</th>
+                    <th>Years of experience</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Python</td>
+                    <td>5 Years</td>
+                    <td>❌</td>
+                </tr>
+                <tbody>
+            </table>
+        </div>
+    </form>
+</div>
+</body>
+</html>
