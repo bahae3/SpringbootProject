@@ -11,6 +11,7 @@
         <h1>Add a technology (skill)</h1>
         <label class="loginLabel">Technology: </label>
         <input type="text" name="technology" class="loginInput" placeholder="e.g.: Python / Java / UML ..." required><br>
+
         <p>Enter only one technology per time!</p> <!-- This should be smaller -->
 
         <label class="loginLabel">Years of experience: </label>
@@ -19,9 +20,12 @@
 
         <input type="submit" value="Add Skill">
         <a th:href="@{/editProfile}">Edit Profile</a>
-        <p class="error" th:text="${error}"></p>
+        <a th:href="@{/homeUser}">Home</a>
+
+        <p class="error" th:text="${error}"></p> <!-- This will show up only when the error occurs -->
         <hr>
         <h3>Your skills: </h3>
+        <p th:text="${competencesError}"></p>
         <div class="table-wrapper">
             <table class="fl-table">
                 <thead>

@@ -11,6 +11,17 @@ import java.util.LinkedList;
 
 @Controller
 public class DeveloperController {
+    @GetMapping("/homeUser")
+    public String homeUser(HttpSession session, Model model) {
+        // Retrieve user from session
+        User user = (User) session.getAttribute("loggedInUser");
+        if (user == null) {
+            return "redirect:/";
+        }
+        model.addAttribute("user", user);
+        return "user/homePage";
+    }
+
     // Edit profile section
     @GetMapping("/editProfile")
     public String editProfile(HttpSession session, Model model) {
@@ -55,7 +66,11 @@ public class DeveloperController {
             return "redirect:/";
         }
         LinkedList<Competence> competences = Competence.getCompetences(user.getId());
-        model.addAttribute("competences", competences);
+        if (competences.isEmpty()) {
+            model.addAttribute("competencesError", "Add a new skill.");
+        } else {
+            model.addAttribute("competences", competences);
+        }
         return "user/addTechnology";
     }
 
@@ -65,7 +80,7 @@ public class DeveloperController {
         if (user == null) {
             return "redirect:/";
         }
-        String technology = request.getParameter("technology");
+        String technology = request.getParameter("technology").toLowerCase(); // lowercase to make it easy for filter search for admin
         int yearsExperience = Integer.parseInt(request.getParameter("yearsExp"));
         int idUser = user.getId();
 
@@ -91,13 +106,35 @@ public class DeveloperController {
 
     // Dev projects section
     @GetMapping("/yourProjects")
-    public String yourProjects() {
+    public String yourProjects(HttpSession session, Model model) {
+        User user = (User) session.getAttribute("loggedInUser");
+        if (user == null) {
+            return "redirect:/";
+        }
+        LinkedList<Project> projects = Project.getProjectsOfDev(user.getId());
+
+        if (projects.isEmpty()) {
+            model.addAttribute("projectsError", "There are no projects to show.");
+        } else{
+            model.addAttribute("projects", projects);
+        }
         return "user/projects";
     }
 
     // Feedbacks about dev
     @GetMapping("/feedbacks")
-    public String feedbacks() {
+    public String feedbacks(HttpSession session, Model model) {
+        User user = (User) session.getAttribute("loggedInUser");
+        if (user == null) {
+            return "redirect:/";
+        }
+        LinkedList<Project> projects = Project.getProjectsOfDev(user.getId());
+
+        if (projects.isEmpty()) {
+            model.addAttribute("projectsError", "There are no projects to show.");
+        } else{
+            model.addAttribute("projects", projects);
+        }
         return "user/feedbacks";
     }
 }

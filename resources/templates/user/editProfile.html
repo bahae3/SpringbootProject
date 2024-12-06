@@ -18,8 +18,11 @@
         <label class="loginLabel">Password: </label>
         <input type="password" name="editPwd" class="loginInput" th:value="${user.password}"><br>
         <input type="submit" value="Update">
+
         <a th:href="@{/addTech}">Update your skills</a>
-        <p th:text="${error}"></p>
+        <a th:href="@{/homeUser}">Home</a>
+
+        <p th:text="${error}"></p>  <!-- This will show up only when the error occurs -->
     </form>
 </div>
 </body>
