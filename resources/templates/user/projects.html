@@ -55,8 +55,9 @@ YOUR PROJECTS
 <p th:text="${projectsError}"></p>
 
 <div class="card" th:each="project : ${projects}">
-    <h2 th:text="${project.name}"></h2>
-    <p class="card-description" th:text="${project.description}"></p>
+    <h2 th:text="${project.title}">.</h2>
+    <p class="card-description" th:text="${project.description}">.</p>
+    <p class="card-description">Duration: <span th:text="${project.duration}"></span> months.</p>
 </div>
 <a th:href="@{/homeUser}">Home</a>
 </body>

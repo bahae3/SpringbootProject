@@ -1,8 +1,7 @@
 package com.example.demo;
 
 import Model.*;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
@@ -11,6 +10,7 @@ import java.util.LinkedList;
 
 @Controller
 public class DeveloperController {
+    // Home of user side (say developer side)
     @GetMapping("/homeUser")
     public String homeUser(HttpSession session, Model model) {
         // Retrieve user from session
@@ -136,5 +136,12 @@ public class DeveloperController {
             model.addAttribute("projects", projects);
         }
         return "user/feedbacks";
+    }
+
+    // Log out for user
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/";
     }
 }

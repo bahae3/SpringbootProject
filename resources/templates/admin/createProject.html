@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Project</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+<div class="loginFormDiv">
+    <form th:action="@{/createProjectForm}" method="post" class="loginForm" id="createProjectForm">
+        <h1>Create a project</h1>
+        <label class="loginLabel">Project Title: </label>
+        <input type="text" name="title" class="loginInput" required><br>
+
+        <label class="loginLabel">Duration (months): </label>
+        <input type="number" name="duration" class="loginInput" placeholder="e.g.: 3 / 12 / 19 ..." required><br>
+
+        <label class="loginLabel">Project Description: </label><br>
+<!--        <input type="text" name="description" class="loginInput" required><br>-->
+        <textarea name="description" rows="6" cols="50" form="createProjectForm" required></textarea><br>
+
+        <input type="submit" value="Create Project">
+        <a th:href="@{/homeAdmin}">Home</a>
+
+        <p class="error" th:text="${errorCreate}"></p> <!-- This will show up only when the error occurs -->
+    </form>
+</div>
+</body>
+</html>

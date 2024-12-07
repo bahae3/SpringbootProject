@@ -35,5 +35,6 @@ create table project(
     idUser int,
     rating int, -- rating / 5
     feedback varchar(255), -- comment about dev's work by admin
+    duration int, -- duration by months
     foreign key (idUser) references users(id)
 );

@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Feedbacks</title>
+    <title>All Projects</title>
+    <link rel="stylesheet" href="../styles.css">
     <style>
         body {
             font: 1em/1.618 Inter, sans-serif;
@@ -29,8 +30,8 @@
             flex-direction: column;
             margin: 1.5rem;
 
-            max-width: 500px;
-            height: 300px;
+            max-width: 400px;
+            height: 220px;
             padding: 35px;
 
             border: 1px solid rgba(255, 255, 255, .25);
@@ -48,30 +49,15 @@
     </style>
 </head>
 <body>
-FEEDBACKS ABOUT YOUR WORK
-
-<p th:text="${projectsError}"></p>
-
 <div class="card" th:each="project : ${projects}">
     <h2 th:text="${project.title}">.</h2>
     <p class="card-description" th:text="${project.description}">.</p>
     <p class="card-description">Duration: <span th:text="${project.duration}"></span> months.</p>
+    <a th:href="@{/deleteProject(idProject=${project.id})}">Delete project</a>
 
-    <div th:if="${project.rating > 0}">
-        <p class="card-description">Rating: <span th:text="${project.rating}"></span>/5</p>
-    </div>
-    <div th:if="${project.rating == 0}">
-        <p class="card-description">Rating: There's no rating yet.</p>
-    </div>
-
-    <div th:if="${project.feedback != null}">
-        <p class="card-description">Feedback: <span th:text="${project.feedback}"></span></p>
-    </div>
-    <div th:if="${project.feedback == null}">
-        <p class="card-description">Feedback: There's no feedback yet.</p>
-    </div>
-
+    <p th:text="${errorDelete}"></p> <!-- If error on project deleting -->
 </div>
-<a th:href="@{/homeUser}">Home</a>
+<a th:href="@{/homeAdmin}">Home</a>
+<a th:href="@{/createProject}">Create a new Project</a>
 </body>
 </html>

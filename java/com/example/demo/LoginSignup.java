@@ -28,10 +28,10 @@ public class LoginSignup {
             session.setAttribute("loggedInUser", user);
 //            session.setMaxInactiveInterval(5 * 60 * 60);
             if (user.getIsAdmin() == 1) {
-                return "admin/adminPage";
+                return "redirect:/homeAdmin";
             } else {
                 model.addAttribute("user", user);
-                return "user/homePage";
+                return "redirect:/homeUser";
             }
         }
 

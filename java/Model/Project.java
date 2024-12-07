@@ -8,14 +8,15 @@ import java.sql.ResultSet;
 import java.util.LinkedList;
 
 public class Project {
-    private int id, idUser, rating;
-    private String name, description, feedback;
+    private int id, idUser, rating, duration; // duration by months (e.g.: 5 months, 17 months...)
+    private String title, description, feedback;
 
-    public Project(int id, int idUser, int rating, String name, String description, String feedback) {
+    public Project(int id, int idUser, int rating, int duration, String title, String description, String feedback) {
         this.id = id;
         this.idUser = idUser;
         this.rating = rating;
-        this.name = name;
+        this.duration = duration;
+        this.title = title;
         this.description = description;
         this.feedback = feedback;
     }
@@ -44,12 +45,20 @@ public class Project {
         this.rating = rating;
     }
 
-    public String getName() {
-        return name;
+    public int getDuration() {
+        return duration;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getDescription() {
@@ -74,7 +83,8 @@ public class Project {
                 "id=" + id +
                 ", idUser=" + idUser +
                 ", rating=" + rating +
-                ", name='" + name + '\'' +
+                ", duration=" + duration +
+                ", titre='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", feedback='" + feedback + '\'' +
                 '}';
@@ -96,8 +106,9 @@ public class Project {
                 int idUser = rs.getInt("idUser");
                 int rating = rs.getInt("rating");
                 String feedback = rs.getString("feedback");
+                int duration = rs.getInt("duration");
 
-                Project project = new Project(id, idUser, rating, projectName, projectDescription, feedback);
+                Project project = new Project(id, idUser, rating, duration, projectName, projectDescription, feedback);
                 projects.add(project);
             }
             return projects;
@@ -125,8 +136,9 @@ public class Project {
                 int idUserDb = rs.getInt("idUser");
                 int rating = rs.getInt("rating");
                 String feedback = rs.getString("feedback");
+                int duration = rs.getInt("duration");
 
-                Project project = new Project(id, idUserDb, rating, projectName, projectDescription, feedback);
+                Project project = new Project(id, idUserDb, rating, duration, projectName, projectDescription, feedback);
                 projects.add(project);
             }
             return projects;
@@ -138,14 +150,15 @@ public class Project {
     }
 
     // Create a new project by admin
-    public static boolean createProject(String name, String description) {
+    public static boolean createProject(String title, int duratrion, String description) {
         boolean res = true;
         Connection conn = SingletonConn.getConnection();
-        String sqlQuery = "INSERT INTO project (name, description) VALUES (?, ?)";
+        String sqlQuery = "INSERT INTO project (name, description, duration) VALUES (?, ?, ?)";
         try {
             PreparedStatement pstmt = conn.prepareStatement(sqlQuery);
-            pstmt.setString(1, name);
+            pstmt.setString(1, title);
             pstmt.setString(2, description);
+            pstmt.setInt(3, duratrion);
 
             int result = pstmt.executeUpdate();
             if (result != 1) res = false;
