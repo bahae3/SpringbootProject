@@ -3,6 +3,7 @@ package Model;
 import DAO.SingletonConn;
 
 import java.sql.*;
+import java.util.LinkedList;
 
 public class User {
     private int id, isAdmin;  // 1: is admin. 0: is not admin
@@ -118,6 +119,63 @@ public class User {
         }
     }
 
+    // Select all users
+    public static LinkedList<User> getAllUsers() {
+        LinkedList<User> users = new LinkedList<>();
+        Connection conn = SingletonConn.getConnection();
+        String sqlQuery = "SELECT * FROM users";
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(sqlQuery);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String firstName = rs.getString("firstName");
+                String lastName = rs.getString("lastName");
+                String userEmail = rs.getString("email");
+                String userPassword = rs.getString("password");
+                int isAdmin = rs.getInt("isAdmin");
+                String role = rs.getString("role");
+                User user = new User(id, firstName, lastName, userEmail, userPassword, isAdmin, role);
+                users.add(user);
+            }
+            return users;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    // Select users by skill
+    public static LinkedList<User> getUsersBySkill(String skill) {
+        LinkedList<User> users = new LinkedList<>();
+        Connection conn = SingletonConn.getConnection();
+        String sqlQuery = "SELECT * FROM users JOIN competences ON users.id = competences.idUser WHERE technology=?";
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(sqlQuery);
+            pstmt.setString(1, skill);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String firstName = rs.getString("firstName");
+                String lastName = rs.getString("lastName");
+                String userEmail = rs.getString("email");
+                String userPassword = rs.getString("password");
+                int isAdmin = rs.getInt("isAdmin");
+                String role = rs.getString("role");
+                User user = new User(id, firstName, lastName, userEmail, userPassword, isAdmin, role);
+                users.add(user);
+            }
+            return users;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     // Add a new user to the db, sign up
     public static boolean addNewUser(String firstName, String lastName, String email, String password) {
         boolean res = true;
@@ -153,6 +211,26 @@ public class User {
             pstmt.setString(3, email);
             pstmt.setString(4, password);
             pstmt.setInt(5, idUser);
+
+            int result = pstmt.executeUpdate();
+            if (result != 1) res = false;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            res = false;
+        }
+        return res;
+    }
+
+    // When the admin assigns a role to the user
+    public static boolean assignRoleToDev(int idUser, String role) {
+        boolean res = true;
+        Connection conn = SingletonConn.getConnection();
+        String sqlQuery = "UPDATE users SET role=? WHERE id=?";
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(sqlQuery);
+            pstmt.setString(1, role);
+            pstmt.setInt(2, idUser);
 
             int result = pstmt.executeUpdate();
             if (result != 1) res = false;

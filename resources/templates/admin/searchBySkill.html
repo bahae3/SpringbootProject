@@ -2,9 +2,75 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Search By Skill</title>
+    <title>Search devs by skill</title>
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        body {
+            font: 1em/1.618 Inter, sans-serif;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+
+            min-height: 100vh;
+            padding: 30px;
+            margin: 0;
+
+            color: #224;
+            background: url(https://source.unsplash.com/E8Ufcyxz514/2400x1823) center / cover no-repeat fixed;
+        }
+
+        .card {
+            max-width: 300px;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            margin: 1.5rem;
+
+            max-width: 400px;
+            height: 220px;
+            padding: 35px;
+
+            border: 1px solid rgba(255, 255, 255, .25);
+            border-radius: 20px;
+            background-color: rgba(255, 255, 255, 0.45);
+            box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.25);
+
+            backdrop-filter: blur(15px);
+        }
+
+        .card-description {
+            font-size: 0.9rem;
+            color: #446;
+        }
+    </style>
 </head>
 <body>
-Search By Skill
+
+<form th:action="@{/searchBySkillForm}" method="post" class="loginForm">
+    <h1>Search for developers by skill</h1>
+    <label class="loginLabel">Type a skill: </label>
+    <input type="text" name="skill" class="loginInput" required><br>
+    <input type="submit" value="Search">
+
+    <div th:if="${users != null}">
+        <div class="card" th:each="user : ${users}">
+            <h2 th:text="${user.firstName} + ' ' + ${user.lastName}">.</h2>
+            <p class="card-description" th:text="${user.email}">.</p>
+            <p>Role: <span class="card-description" th:text="${user.role}"></span>.</p>
+
+            <p th:text="${errorDelete}"></p> <!-- If error on project deleting -->
+        </div>
+    </div>
+    <div th:else>
+        <div></div>
+    </div>
+
+
+    <a th:href="@{/homeAdmin}">Home</a>
+
+</form>
+
 </body>
 </html>

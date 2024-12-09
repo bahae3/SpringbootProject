@@ -119,6 +119,36 @@ public class Project {
         }
     }
 
+    // Select project by id
+    public static Project getProjectById(int idProject) {
+        Project project = null;
+        Connection conn = SingletonConn.getConnection();
+        String sqlQuery = "SELECT * FROM project WHERE id=?";
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(sqlQuery);
+            pstmt.setInt(1, idProject);
+
+            ResultSet rs = pstmt.executeQuery();
+            if (!rs.next()) {
+                int id = rs.getInt("id");
+                String projectName = rs.getString("name");
+                String projectDescription = rs.getString("description");
+                int idUser = rs.getInt("idUser");
+                int rating = rs.getInt("rating");
+                String feedback = rs.getString("feedback");
+                int duration = rs.getInt("duration");
+
+                project = new Project(id, idUser, rating, duration, projectName, projectDescription, feedback);
+            }
+
+            return project;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     // Selecting all the projects assigned to a single developer (user)
     public static LinkedList<Project> getProjectsOfDev(int idUser) {
         LinkedList<Project> projects = new LinkedList<>();
@@ -210,7 +240,7 @@ public class Project {
     }
 
     // Assign a feedback and a rating to a user in a project by admin
-    public static boolean assignRatingAndFeedback(String feedback, int rating) {
+    public static boolean assignRatingAndFeedback(String feedback, int rating, int id) {
         boolean res = true;
         Connection conn = SingletonConn.getConnection();
         String sqlQuery = "UPDATE project SET feedback=?, rating=? WHERE id=?";
@@ -218,6 +248,7 @@ public class Project {
             PreparedStatement pstmt = conn.prepareStatement(sqlQuery);
             pstmt.setString(1, feedback);
             pstmt.setInt(2, rating);
+            pstmt.setInt(3, id);
 
             int result = pstmt.executeUpdate();
             if (result != 1) res = false;

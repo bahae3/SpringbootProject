@@ -53,6 +53,7 @@
     <h2 th:text="${project.title}">.</h2>
     <p class="card-description" th:text="${project.description}">.</p>
     <p class="card-description">Duration: <span th:text="${project.duration}"></span> months.</p>
+    <a th:href="@{/assignDev(idProject=${project.id})}">Assign developer</a>
     <a th:href="@{/deleteProject(idProject=${project.id})}">Delete project</a>
 
     <p th:text="${errorDelete}"></p> <!-- If error on project deleting -->

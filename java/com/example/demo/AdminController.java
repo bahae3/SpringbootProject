@@ -10,6 +10,7 @@ import java.util.LinkedList;
 
 @Controller
 public class AdminController {
+    String[] roles = {"Front-end Developer", "Back-end Developer", "Database Administrator", "Full Stack Developer", "Tester", "Cloud Engineer", "DevOps Engineer", "OS Administrator"};
     // Home of admin side (say "Chef de Projet" side)
     @GetMapping("/homeAdmin")
     public String homeUser(HttpSession session, Model model) {
@@ -33,6 +34,36 @@ public class AdminController {
         LinkedList<Project> projects = Project.getProjects();
         model.addAttribute("projects", projects);
         return "admin/allProjects";
+    }
+
+    // Assign developers to projects and make their roles
+    @GetMapping("/assignDev")
+    public String assignDev(@RequestParam("idProject") int id, HttpSession session, Model model) {
+        User user = (User) session.getAttribute("loggedInUser");
+        if (user == null) {
+            return "redirect:/";
+        }
+
+        Project project = Project.getProjectById(id);
+        LinkedList<User>  users = User.getAllUsers();
+
+        model.addAttribute("project", project);
+        model.addAttribute("users", users);
+        model.addAttribute("roles", roles);
+        return "admin/assignDevs";
+    }
+
+    @PostMapping("/assignDevForm")
+    public String assignDevForm(HttpSession session, HttpServletRequest request, Model model) {
+        int idUser = Integer.parseInt(request.getParameter("developer"));
+        int idProject = Integer.parseInt(request.getParameter("projectId"));
+        String role = request.getParameter("role");
+
+        if (User.assignRoleToDev(idUser, role) && Project.assignDevToProject(idProject, idUser)) {
+            return "redirect:/allProjects";
+        }
+
+        return "redirect:/allProjects";
     }
 
     @GetMapping("/deleteProject")
@@ -75,7 +106,23 @@ public class AdminController {
 
     // Search projects by skill (filter)
     @GetMapping("/searchBySkill")
-    public String searchBySkill(Model model) {
+    public String searchBySkill(HttpSession session, Model model) {
+        User user = (User) session.getAttribute("loggedInUser");
+        if (user == null) {
+            return "redirect:/";
+        }
+        return "admin/searchBySkill";
+    }
+
+    @PostMapping("/searchBySkillForm")
+    public String searchBySkillForm(HttpSession session, HttpServletRequest request, Model model) {
+        User user = (User) session.getAttribute("loggedInUser");
+        if (user == null) {
+            return "redirect:/";
+        }
+        String skill = request.getParameter("skill").toLowerCase();
+        LinkedList<User> users = User.getUsersBySkill(skill);
+        model.addAttribute("users", users);
         return "admin/searchBySkill";
     }
 
