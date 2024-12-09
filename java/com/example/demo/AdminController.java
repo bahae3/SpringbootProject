@@ -32,6 +32,7 @@ public class AdminController {
         }
 
         LinkedList<Project> projects = Project.getProjects();
+        System.out.println(projects);
         model.addAttribute("projects", projects);
         return "admin/allProjects";
     }
@@ -43,9 +44,8 @@ public class AdminController {
         if (user == null) {
             return "redirect:/";
         }
-
         Project project = Project.getProjectById(id);
-        LinkedList<User>  users = User.getAllUsers();
+        LinkedList<User> users = User.getAllDevelopers();
 
         model.addAttribute("project", project);
         model.addAttribute("users", users);
@@ -55,6 +55,11 @@ public class AdminController {
 
     @PostMapping("/assignDevForm")
     public String assignDevForm(HttpSession session, HttpServletRequest request, Model model) {
+        User user = (User) session.getAttribute("loggedInUser");
+        if (user == null) {
+            return "redirect:/";
+        }
+
         int idUser = Integer.parseInt(request.getParameter("developer"));
         int idProject = Integer.parseInt(request.getParameter("projectId"));
         String role = request.getParameter("role");
@@ -63,7 +68,7 @@ public class AdminController {
             return "redirect:/allProjects";
         }
 
-        return "redirect:/allProjects";
+        return "redirect:/assignDevForm";
     }
 
     @GetMapping("/deleteProject")
@@ -128,7 +133,27 @@ public class AdminController {
 
     // Evaluate developers within each project
     @GetMapping("/evaluateDevs")
-    public String evaluateDevs(Model model) {
+    public String evaluateDevs(HttpSession session, Model model) {
+        User user = (User) session.getAttribute("loggedInUser");
+        if (user == null) {
+            return "redirect:/";
+        }
+
+        LinkedList<UserProject> usersAndProjects = UserProject.getUsersAndProjects();
+        model.addAttribute("usersAndProjects", usersAndProjects);
         return "admin/evaluateDevs";
     }
+
+    @GetMapping("/evaluateSingleDev")
+    public String evaluateSingleDev(HttpSession session, Model model) {
+        User user = (User) session.getAttribute("loggedInUser");
+        if (user == null) {
+            return "redirect:/";
+        }
+
+        LinkedList<UserProject> usersAndProjects = UserProject.getUsersAndProjects();
+        model.addAttribute("usersAndProjects", usersAndProjects);
+        return "admin/evaluateDevs";
+    }
+
 }

@@ -120,10 +120,10 @@ public class User {
     }
 
     // Select all users
-    public static LinkedList<User> getAllUsers() {
+    public static LinkedList<User> getAllDevelopers() {
         LinkedList<User> users = new LinkedList<>();
         Connection conn = SingletonConn.getConnection();
-        String sqlQuery = "SELECT * FROM users";
+        String sqlQuery = "SELECT * FROM users WHERE isAdmin=0";
         try {
             PreparedStatement pstmt = conn.prepareStatement(sqlQuery);
 
@@ -241,4 +241,5 @@ public class User {
         }
         return res;
     }
+
 }

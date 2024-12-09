@@ -100,7 +100,7 @@ public class Project {
 
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
-                int id = rs.getInt("id");
+                int id = rs.getInt("idProject");
                 String projectName = rs.getString("name");
                 String projectDescription = rs.getString("description");
                 int idUser = rs.getInt("idUser");
@@ -123,14 +123,14 @@ public class Project {
     public static Project getProjectById(int idProject) {
         Project project = null;
         Connection conn = SingletonConn.getConnection();
-        String sqlQuery = "SELECT * FROM project WHERE id=?";
+        String sqlQuery = "SELECT * FROM project WHERE idProject=?";
         try {
             PreparedStatement pstmt = conn.prepareStatement(sqlQuery);
             pstmt.setInt(1, idProject);
 
             ResultSet rs = pstmt.executeQuery();
-            if (!rs.next()) {
-                int id = rs.getInt("id");
+            if (rs.next()) {
+                int id = rs.getInt("idProject");
                 String projectName = rs.getString("name");
                 String projectDescription = rs.getString("description");
                 int idUser = rs.getInt("idUser");
@@ -160,7 +160,7 @@ public class Project {
 
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
-                int id = rs.getInt("id");
+                int id = rs.getInt("idProject");
                 String projectName = rs.getString("name");
                 String projectDescription = rs.getString("description");
                 int idUserDb = rs.getInt("idUser");
@@ -204,7 +204,7 @@ public class Project {
     public static boolean deleteProject(int idProject) {
         boolean res = true;
         Connection conn = SingletonConn.getConnection();
-        String sqlQuery = "DELETE FROM project WHERE id = ?";
+        String sqlQuery = "DELETE FROM project WHERE idProject = ?";
         try {
             PreparedStatement pstmt = conn.prepareStatement(sqlQuery);
             pstmt.setInt(1, idProject);
@@ -223,7 +223,7 @@ public class Project {
     public static boolean assignDevToProject(int idProject, int idUser) {
         boolean res = true;
         Connection conn = SingletonConn.getConnection();
-        String sqlQuery = "UPDATE project SET idUser=? WHERE id=?";
+        String sqlQuery = "UPDATE project SET idUser=? WHERE idProject=?";
         try {
             PreparedStatement pstmt = conn.prepareStatement(sqlQuery);
             pstmt.setInt(1, idUser);
@@ -243,7 +243,7 @@ public class Project {
     public static boolean assignRatingAndFeedback(String feedback, int rating, int id) {
         boolean res = true;
         Connection conn = SingletonConn.getConnection();
-        String sqlQuery = "UPDATE project SET feedback=?, rating=? WHERE id=?";
+        String sqlQuery = "UPDATE project SET feedback=?, rating=? WHERE idProject=?";
         try {
             PreparedStatement pstmt = conn.prepareStatement(sqlQuery);
             pstmt.setString(1, feedback);

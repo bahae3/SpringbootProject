@@ -16,7 +16,7 @@ create table users(
 );
 
 -- insert an admin:
-INSERT INTO users (firstName, lastName, email, password, isAdmin) VALUES ("Bahae", "As", "admin@email.com", "admin", 1);
+INSERT INTO users (firstName, lastName, email, password, isAdmin, role) VALUES ("Bahae", "As", "admin@email.com", "admin", 1, "Chef de Projet");
 
 -- create competences table
 create table competences(
