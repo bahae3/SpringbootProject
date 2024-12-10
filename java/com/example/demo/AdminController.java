@@ -32,7 +32,6 @@ public class AdminController {
         }
 
         LinkedList<Project> projects = Project.getProjects();
-        System.out.println(projects);
         model.addAttribute("projects", projects);
         return "admin/allProjects";
     }
@@ -64,7 +63,7 @@ public class AdminController {
         int idProject = Integer.parseInt(request.getParameter("projectId"));
         String role = request.getParameter("role");
 
-        if (User.assignRoleToDev(idUser, role) && Project.assignDevToProject(idProject, idUser)) {
+        if (User.assignRoleToDev(idUser, role) && UserProject.assignDevToProject(idProject, idUser)) {
             return "redirect:/allProjects";
         }
 
@@ -139,21 +138,40 @@ public class AdminController {
             return "redirect:/";
         }
 
-        LinkedList<UserProject> usersAndProjects = UserProject.getUsersAndProjects();
+        LinkedList<SelectUserProject> usersAndProjects = UserProject.getUsersAndProjects();
         model.addAttribute("usersAndProjects", usersAndProjects);
         return "admin/evaluateDevs";
     }
 
     @GetMapping("/evaluateSingleDev")
-    public String evaluateSingleDev(HttpSession session, Model model) {
+    public String evaluateSingleDev(@RequestParam("idProject") int idProject, @RequestParam("idUser") int idUser, HttpSession session, Model model) {
         User user = (User) session.getAttribute("loggedInUser");
         if (user == null) {
             return "redirect:/";
         }
 
-        LinkedList<UserProject> usersAndProjects = UserProject.getUsersAndProjects();
-        model.addAttribute("usersAndProjects", usersAndProjects);
-        return "admin/evaluateDevs";
+        System.out.println("id project: " + idProject + " id user: " + idUser);
+        SelectUserProject userAndProject = UserProject.getUserAndProjectById(idProject, idUser);
+        System.out.println(userAndProject);
+        model.addAttribute("userAndProject", userAndProject);
+        return "admin/evaluateSingleDev";
+    }
+
+    @PostMapping("/evaluateDevForm")
+    public String evaluateDevForm(HttpSession session, HttpServletRequest request, Model model) {
+        User user = (User) session.getAttribute("loggedInUser");
+        if (user == null) {
+            return "redirect:/";
+        }
+
+        int idUser = Integer.parseInt(request.getParameter("idUser"));
+        int idProject = Integer.parseInt(request.getParameter("idProject"));
+        String feedback = request.getParameter("feedback");
+        int rating = Integer.parseInt(request.getParameter("rating"));
+
+        UserProject.assignRatingAndFeedback(feedback, rating, idProject, idUser);
+
+        return "redirect:/evaluateDevs";
     }
 
 }

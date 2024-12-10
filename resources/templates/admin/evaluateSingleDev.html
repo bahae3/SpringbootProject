@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Evaluate Developers</title>
+    <title>Evaluate a dev</title>
     <link rel="stylesheet" href="../styles.css">
     <style>
         body {
@@ -49,13 +49,24 @@
     </style>
 </head>
 <body>
-<div class="card" th:each="userProject : ${usersAndProjects}">
-    <h2 th:text="${userProject.userFirstName + ' ' + userProject.userLastName}">.</h2>
-    <p class="card-description" th:text="${userProject.projectTitle}">.</p>
-    <p class="card-description">Duration: <span th:text="${userProject.projectDuration}"></span> months.</p>
-    <a th:href="@{/evaluateSingleDev(idProject=${userProject.idProject}, idUser=${userProject.idUser})}">Evaluate developer</a>
+<div class="card">
+    <h2 th:text="${userAndProject.userFirstName + ' ' + userAndProject.userLastName}">.</h2>
+    <p class="card-description" th:text="${userAndProject.projectTitle}">.</p>
+    <p class="card-description">Duration: <span th:text="${userAndProject.projectDuration}"></span> months.</p>
+    <form th:action="@{/evaluateDevForm}" method="post" class="loginForm" id="evaluateDevForm">
+        <input type="hidden" name="idProject" th:value="${userAndProject.idProject}">
+        <input type="hidden" name="idUser" th:value="${userAndProject.idUser}">
+
+        <label class="loginLabel">Rating: </label>
+        <input type="number" name="rating" class="loginInput" placeholder="*/5"><br>
+
+        <label class="loginLabel">Feedback: </label> <br>
+        <textarea name="feedback" rows="6" cols="50" form="evaluateDevForm" required></textarea><br>
+
+        <input type="submit" value="Evaluate">
+        <a th:href="@{/homeAdmin}">Home</a>
+    </form>
 
 </div>
-<a th:href="@{/homeAdmin}">Home</a>
 </body>
 </html>
