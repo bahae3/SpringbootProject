@@ -111,7 +111,7 @@ public class DeveloperController {
         if (user == null) {
             return "redirect:/";
         }
-        LinkedList<Project> projects = Project.getProjectsOfDev(user.getId());
+        LinkedList<SelectUserProject> projects = UserProject.getProjectsOfDev(user.getId());
 
         if (projects.isEmpty()) {
             model.addAttribute("projectsError", "There are no projects to show.");
@@ -128,12 +128,12 @@ public class DeveloperController {
         if (user == null) {
             return "redirect:/";
         }
-        LinkedList<Project> projects = Project.getProjectsOfDev(user.getId());
+        LinkedList<UserProject> projects = UserProject.getProjectsOfDevForFeedback(user.getId());
 
         if (projects.isEmpty()) {
             model.addAttribute("projectsError", "There are no projects to show.");
         } else{
-            model.addAttribute("projects", projects);
+            model.addAttribute("projectsFeedback", projects);
         }
         return "user/feedbacks";
     }

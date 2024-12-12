@@ -105,34 +105,6 @@ public class Project {
         }
     }
 
-    //TODO: THIS MAKES A BUG, DEBUG IT LATER
-    // Selecting all the projects assigned to a single developer (user)
-    public static LinkedList<Project> getProjectsOfDev(int idUser) {
-        LinkedList<Project> projects = new LinkedList<>();
-        Connection conn = SingletonConn.getConnection();
-        String sqlQuery = "SELECT * FROM project WHERE idUser = ?";
-        try {
-            PreparedStatement pstmt = conn.prepareStatement(sqlQuery);
-            pstmt.setInt(1, idUser);
-
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                int id = rs.getInt("idProject");
-                String projectName = rs.getString("name");
-                String projectDescription = rs.getString("description");
-                int duration = rs.getInt("duration");
-
-                Project project = new Project(id, duration, projectName, projectDescription);
-                projects.add(project);
-            }
-            return projects;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
     // Create a new project by admin
     public static boolean createProject(String title, int duratrion, String description) {
         boolean res = true;

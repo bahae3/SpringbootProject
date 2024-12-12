@@ -8,15 +8,18 @@ import java.sql.ResultSet;
 import java.util.LinkedList;
 
 public class UserProject {
-    private int id, idProject, idUser, rating;
-    private String feedback;
+    private int id, idProject, idUser, rating, duration;
+    private String feedback, title, description;
 
-    public UserProject(int id, int idProject, int idUser, int rating, String feedback) {
+    public UserProject(int id, int idProject, int idUser, int rating, int duration, String feedback, String title, String description) {
         this.id = id;
         this.idProject = idProject;
         this.idUser = idUser;
         this.rating = rating;
+        this.duration = duration;
         this.feedback = feedback;
+        this.title = title;
+        this.description = description;
     }
 
     public int getId() {
@@ -59,6 +62,30 @@ public class UserProject {
         this.feedback = feedback;
     }
 
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @Override
     public String toString() {
         return "UserProject{" +
@@ -84,10 +111,11 @@ public class UserProject {
                 int idUser = rs.getInt("idUser");
                 int duration = rs.getInt("duration");
                 String title = rs.getString("name");
+                String description = rs.getString("description");
                 String firstName = rs.getString("firstName");
                 String lastName = rs.getString("lastName");
 
-                SelectUserProject userProject = new SelectUserProject(title, firstName, lastName, idProject, idUser, duration);
+                SelectUserProject userProject = new SelectUserProject(title, firstName, lastName, description, idProject, idUser, duration);
                 usersAndProjects.add(userProject);
             }
             return usersAndProjects;
@@ -99,10 +127,10 @@ public class UserProject {
     }
 
     // Selecting users with projects assigned to them by idUser and idProject
-    public static SelectUserProject getUserAndProjectById(int projectId, int userId) {
+    public static SelectUserProject getUserAndProjectByIds(int projectId, int userId) {
         SelectUserProject userProject = null;
         Connection conn = SingletonConn.getConnection();
-        String sqlQuery = "SELECT project.idProject, project.name AS projectName, project.duration, " +
+        String sqlQuery = "SELECT project.idProject, project.name AS projectName, project.duration, project.description, " +
                 "users.firstName, users.lastName, projectbyuser.idUser " +
                 "FROM projectbyuser " +
                 "JOIN project ON project.idProject = projectbyuser.idProject " +
@@ -119,10 +147,11 @@ public class UserProject {
                 int idUser = rs.getInt("idUser");
                 int duration = rs.getInt("duration");
                 String title = rs.getString("projectName");
+                String description = rs.getString("description");
                 String firstName = rs.getString("firstName");
                 String lastName = rs.getString("lastName");
 
-                userProject = new SelectUserProject(title, firstName, lastName, duration, idProject, idUser);
+                userProject = new SelectUserProject(title, firstName, lastName, description, idProject, idUser, duration);
             }
 
 
@@ -130,6 +159,33 @@ public class UserProject {
             e.printStackTrace();
         }
         return userProject;
+    }
+
+    // Selecting projects of 1 developer by the dev's id
+    public static LinkedList<SelectUserProject> getProjectsOfDev(int userId) {
+        LinkedList<SelectUserProject> projects = new LinkedList<>();
+        Connection conn = SingletonConn.getConnection();
+        String sqlQuery = "SELECT project.idProject, project.name AS projectName, project.duration, project.description FROM projectbyuser JOIN project ON project.idProject = projectbyuser.idProject JOIN users ON users.id = projectbyuser.idUser WHERE projectbyuser.idUser = ?;";
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(sqlQuery);
+            pstmt.setInt(1, userId);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                int idProject = rs.getInt("idProject");
+                int duration = rs.getInt("duration");
+                String title = rs.getString("projectName");
+                String description = rs.getString("description");
+
+                SelectUserProject userProject = new SelectUserProject(title, null, null, description, idProject, 0, duration);
+                projects.add(userProject);
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return projects;
     }
 
     // Assign a developer to a project by admin
@@ -150,6 +206,39 @@ public class UserProject {
             res = false;
         }
         return res;
+    }
+
+
+    // Selecting user's projects for feedback and rating\
+    // SELECT * FROM project JOIN projectbyuser ON project.idProject = projectbyuser.idProject WHERE projectbyuser.idUser=1;
+    public static LinkedList<UserProject> getProjectsOfDevForFeedback(int userId) {
+        LinkedList<UserProject> projects = new LinkedList<>();
+        Connection conn = SingletonConn.getConnection();
+        String sqlQuery = "SELECT project.idProject, project.name, project.description, project.duration, projectbyuser.id, projectbyuser.idUser, projectbyuser.feedback, projectbyuser.rating FROM project JOIN projectbyuser ON project.idProject = projectbyuser.idProject WHERE projectbyuser.idUser=?";
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(sqlQuery);
+            pstmt.setInt(1, userId);
+
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                int idProject = rs.getInt("idProject");
+                int idUser = rs.getInt("idUser");
+                int duration = rs.getInt("duration");
+                int rating = rs.getInt("rating");
+                String title = rs.getString("name");
+                String description = rs.getString("description");
+                String feedback = rs.getString("feedback");
+
+                UserProject userProject = new UserProject(id, idProject, idUser, rating, duration, feedback, title, description);
+                projects.add(userProject);
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return projects;
     }
 
     // Assign a feedback and a rating to a user in a project by admin

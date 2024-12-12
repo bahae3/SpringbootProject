@@ -48,11 +48,10 @@
     </style>
 </head>
 <body>
-FEEDBACKS ABOUT YOUR WORK
 
 <p th:text="${projectsError}"></p>
 
-<div class="card" th:each="project : ${projects}">
+<div class="card" th:each="project : ${projectsFeedback}">
     <h2 th:text="${project.title}">.</h2>
     <p class="card-description" th:text="${project.description}">.</p>
     <p class="card-description">Duration: <span th:text="${project.duration}"></span> months.</p>

@@ -151,7 +151,7 @@ public class AdminController {
         }
 
         System.out.println("id project: " + idProject + " id user: " + idUser);
-        SelectUserProject userAndProject = UserProject.getUserAndProjectById(idProject, idUser);
+        SelectUserProject userAndProject = UserProject.getUserAndProjectByIds(idProject, idUser);
         System.out.println(userAndProject);
         model.addAttribute("userAndProject", userAndProject);
         return "admin/evaluateSingleDev";

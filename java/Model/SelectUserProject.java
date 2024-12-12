@@ -1,13 +1,14 @@
 package Model;
 
 public class SelectUserProject {
-    private String projectTitle, userFirstName, userLastName;
+    private String projectTitle, userFirstName, userLastName, projectDescription;
     private int idProject, idUser, projectDuration;
 
-    public SelectUserProject(String projectTitle, String userFirstName, String userLastName, int idProject, int idUser, int projectDuration) {
+    public SelectUserProject(String projectTitle, String userFirstName, String userLastName, String projectDescription, int idProject, int idUser, int projectDuration) {
         this.projectTitle = projectTitle;
         this.userFirstName = userFirstName;
         this.userLastName = userLastName;
+        this.projectDescription = projectDescription;
         this.idProject = idProject;
         this.idUser = idUser;
         this.projectDuration = projectDuration;
@@ -59,6 +60,14 @@ public class SelectUserProject {
 
     public void setProjectDuration(int projectDuration) {
         this.projectDuration = projectDuration;
+    }
+
+    public String getProjectDescription() {
+        return projectDescription;
+    }
+
+    public void setProjectDescription(String projectDescription) {
+        this.projectDescription = projectDescription;
     }
 
     @Override
